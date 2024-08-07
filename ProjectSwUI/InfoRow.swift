@@ -3,6 +3,8 @@ import SwiftUI
 
 struct InfoRow: View {
     
+    @AppStorage("rowSize") private var value: Double = 100
+    
     var post: Post
     
     var body: some View {
@@ -15,11 +17,12 @@ struct InfoRow: View {
                 default: ProgressView()
                 }
             }
-            .frame(width: 100, height: 100)
+            .frame(width: value)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             
             Text(post.name).font(.title)
         }
+        .frame(height: value)
     }
 }
 

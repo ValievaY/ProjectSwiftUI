@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct ProjectSwUIApp: App {
+    @AppStorage("isLinkOn") private var isLinkOn = false
     var body: some Scene {
         WindowGroup {
             ContentView()
+            
+                .preferredColorScheme(isLinkOn ? .dark : .light)
         }
     }
 }

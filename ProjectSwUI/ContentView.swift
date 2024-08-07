@@ -3,9 +3,11 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @AppStorage("titleOn") var titleOn = false
+    
     var body: some View {
         TabView() {
-            InfoView()
+            InfoView(titleOn: titleOn)
                 .tabItem {
                     Label("Info", systemImage: "book")
                 }
@@ -15,7 +17,7 @@ struct ContentView: View {
                     Label("World", systemImage: "globe.europe.africa")
                 }
             
-            SettingsView()
+            SettingsView(titleOn: $titleOn)
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
