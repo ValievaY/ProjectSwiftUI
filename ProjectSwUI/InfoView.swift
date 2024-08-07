@@ -8,6 +8,8 @@ struct InfoView: View {
     @State private var posts: [Post] = []
     @State private var searchText = ""
     
+    var titleOn: Bool
+    
     var body: some View {
         
         NavigationView {
@@ -20,19 +22,17 @@ struct InfoView: View {
                     }
                 }
             }
-            .navigationTitle("Superheros")
+            .navigationTitle("\(titleOn ? "Superheros" : "")")
             .bold()
             .font(.largeTitle)
         }
         .searchable(text: $searchText)
         .scrollContentBackground(.hidden)
         .background(.white)
-        .onAppear {
+        .task {
             viewModel.fetchRemoteData() { characters, errorString in
                 if errorString == nil && characters != nil {
-                    DispatchQueue.main.async {
-                        self.posts = characters!
-                    }
+                    self.posts = characters!
                 }
             }
         }
@@ -48,5 +48,6 @@ struct InfoView: View {
 }
 
 #Preview {
-    InfoView()
+    let title = ContentView().titleOn
+    return InfoView(titleOn: title)
 }

@@ -3,33 +3,41 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    var colors = ["Red", "Green", "Blue", "Yellow"]
-    
-    @State private var isNotificationEnabled = false
     @State private var selectedColor = "Red"
-    @State private var value: Double = 0
+    @AppStorage("rowSize") private var value: Double = 100
+    @Environment(\.colorScheme) var colorScheme
+    @AppStorage("isLinkOn") private var isLinkOn = false
+    @Binding var titleOn: Bool
+    @State private var isEditing = false
     
     var body: some View {
         Form {
             Section {
-                Toggle("Notification enabled", isOn: $isNotificationEnabled.animation())
+                Toggle("\(colorScheme == .light ? "Light Theme enabled" : "Dark Theme enabled")", isOn: $isLinkOn.animation())
                 
             }
             
             Section {
-                VStack {
-                    Picker("Please choose a color", selection: $selectedColor) {
-                        ForEach(colors, id: \.self) {
-                            Text($0)
-                        }
-                    }
-                }
+                Toggle("\(titleOn ? "Navigation title enabled" : "Navigation title not enabled")", isOn: $titleOn.animation())
             }
             
             Section {
                 VStack {
-                    Slider(value: $value, in: 0...100)
-                    Text("\(value, specifier: "%.1f")")
+                    Slider(value: $value, in: 50...150, step: 5, onEditingChanged: { editing in
+                        isEditing = editing
+                     })
+                    Text("Row size \(value, specifier: "%.1f")")
+                    Spacer()
+                    if isEditing {
+                        HStack {
+                            Image(.spiderMan)
+                                .resizable()
+                                .frame(width: value)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            Text("Spider-Man").font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                        }
+                        .frame(height: value)
+                    }
                 }
             }
         }
@@ -37,5 +45,6 @@ struct SettingsView: View {
 }
 
 #Preview {
-        SettingsView()
+    let title = ContentView().titleOn
+    return SettingsView(titleOn: .constant(title))
 }
